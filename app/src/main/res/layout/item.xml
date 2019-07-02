@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:padding="10dp"
+              android:orientation="vertical"
+              android:layout_height="wrap_content">
+
+    <TextView android:layout_width="wrap_content"
+              android:id="@+id/tv_title"
+
+              android:textColor="#ff5072"
+              android:textSize="16sp"
+              tools:text="开发首款产品"
+              android:layout_height="wrap_content"/>
+    <TextView android:layout_width="wrap_content"
+              android:id="@+id/tv_desc"
+              android:layout_marginTop="15dp"
+              android:textSize="16sp"
+              android:textColor="#888"
+              tools:text="伟大若有初衷，都出自渺小的理由
+十余人团队，同一个方向
+由工具开始，从经期出发
+只想让女生的世界变得不一样"
+              android:layout_height="wrap_content"/>
+</LinearLayout>
