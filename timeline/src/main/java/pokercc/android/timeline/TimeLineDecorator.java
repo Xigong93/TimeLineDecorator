@@ -41,13 +41,8 @@ public class TimeLineDecorator extends RecyclerView.ItemDecoration {
         this.headDrawable = headDrawable;
         this.lineDrawable = lineDrawable;
         this.centerMargin = centerMargin;
-
-        if (padding != null) {
-            this.padding = padding;
-        } else {
-            this.padding = new Rect();
-        }
-        width = Math.max(headDrawable.getIntrinsicWidth(), lineDrawable.getIntrinsicWidth()) + this.padding.left + this.padding.right;
+        this.padding = padding == null ? new Rect() : padding;
+        this.width = Math.max(headDrawable.getIntrinsicWidth(), lineDrawable.getIntrinsicWidth()) + this.padding.left + this.padding.right;
     }
 
     @Override
@@ -70,7 +65,6 @@ public class TimeLineDecorator extends RecyclerView.ItemDecoration {
             int childCount = layoutManager.getChildCount();
             for (int i = 0; i < childCount; i++) {
                 View child = layoutManager.getChildAt(i);
-
                 if (child != null) {
                     parent.getDecoratedBoundsWithMargins(child, mBounds);
                     final int top = mBounds.top + Math.round(child.getTranslationY());
@@ -82,7 +76,6 @@ public class TimeLineDecorator extends RecyclerView.ItemDecoration {
                     int lineLeft = (width - lineWidth >> 1) + left;
                     this.lineDrawable.setBounds(lineLeft, this.headDrawable.getBounds().bottom + centerMargin, lineLeft + lineWidth, top + mBounds.height() - this.padding.bottom);
                     this.lineDrawable.draw(c);
-                    c.restoreToCount(saveCount);
                 }
             }
             c.restoreToCount(saveCount);
