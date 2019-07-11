@@ -1,11 +1,12 @@
 # 使用RecyclerView.ItemDecorator 实现的时间轴布局
 
-demo图
+
+普通样式
 
 ![](timeline.png)
 
 
-就一个类
+普通样式
 ```
 pokercc.android.timeline.TimeLineDecorator
 ...
@@ -24,6 +25,9 @@ public class TimeLineDecorator extends RecyclerView.ItemDecoration {
 参数解释:
 
 ![](params.png)
+
+贯穿式时间轴
+![贯穿式时间轴](through-timeline.png)
 
 原设计图
 https://www.meiyou.com/dashijian
