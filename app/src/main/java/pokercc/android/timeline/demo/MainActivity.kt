@@ -2,17 +2,18 @@ package pokercc.android.timeline.demo
 
 import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.android.synthetic.main.activity_main.*
 import pokercc.android.timeline.TimeLineDecorator
+import pokercc.android.timeline.ThroughTimeLineDecorator
 
 
 class MainActivity : AppCompatActivity() {
@@ -56,9 +57,60 @@ class MainActivity : AppCompatActivity() {
 
             )
         )
-
     }
 
+    fun onChangeTimeLineClick(view: View) {
+        val headerDrawable = resources.getDrawable(R.drawable.header).mutate() as GradientDrawable
+        headerDrawable.setSize(22, 22)
+
+
+        val lineDrawable = resources.getDrawable(R.drawable.line).mutate() as GradientDrawable
+
+        AlertDialog.Builder(this)
+            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)")) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        recyclerView.removeItemDecorationAt(0)
+                        recyclerView.addItemDecoration(
+                            TimeLineDecorator(
+                                headerDrawable, lineDrawable,
+                                Rect(40, 48, 40, 30), 8
+
+                            )
+                        )
+                    }
+                    1 -> {
+                        // 直接标一个固定值，设置头的间距
+                        recyclerView.removeItemDecorationAt(0)
+                        recyclerView.addItemDecoration(
+                            ThroughTimeLineDecorator(
+                                headerDrawable, lineDrawable,
+                                40, 48, false
+                            )
+                        )
+                    }
+                    2 -> {
+                        // 动态计算头的间距
+                        recyclerView.removeItemDecorationAt(0)
+                        recyclerView.addItemDecoration(
+                            ThroughTimeLineDecorator(
+                                headerDrawable, lineDrawable,
+                                40, false
+                            ) { childView: View ->
+                                val tvTitle = childView.findViewById<View>(R.id.tv_title)
+                                val parentLocation = IntArray(2)
+                                childView.getLocationInWindow(parentLocation)
+                                val childLocation = IntArray(2)
+                                tvTitle.getLocationInWindow(childLocation)
+                                // 这只是TextView一行的情况下，多行的需要计算TextView出行高
+                                val marginTop = childLocation[1] - parentLocation[1] + tvTitle.height / 2
+                                marginTop
+                            }
+                        )
+                    }
+                }
+            }.show()
+    }
 }
 
 data class Item(

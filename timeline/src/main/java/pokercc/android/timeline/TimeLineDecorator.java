@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerView 时间轴的装饰器
+ *
+ * @author pokercc
  */
 public class TimeLineDecorator extends RecyclerView.ItemDecoration {
     /**

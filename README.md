@@ -2,7 +2,7 @@
 
 demo图
 
-![](https://github.com/pokercc/TimeLineDecorator/blob/master/timeline.png)
+![](timeline.png)
 
 
 就一个类
@@ -23,7 +23,7 @@ public class TimeLineDecorator extends RecyclerView.ItemDecoration {
 
 参数解释:
 
-![](https://github.com/pokercc/TimeLineDecorator/blob/master/params.png)
+![](params.png)
 
 原设计图
 https://www.meiyou.com/dashijian
