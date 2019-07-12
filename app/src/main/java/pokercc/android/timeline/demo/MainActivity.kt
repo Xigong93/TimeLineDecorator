@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                         recyclerView.addItemDecoration(
                             ThroughTimeLineDecorator(
                                 headerDrawable, lineDrawable,
-                                40, 48, false
+                                5, 40, 48, false
                             )
                         )
                     }
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                         recyclerView.addItemDecoration(
                             ThroughTimeLineDecorator(
                                 headerDrawable, lineDrawable,
-                                40, false
+                                40, 40, false
                             ) { childView: View ->
                                 val tvTitle = childView.findViewById<View>(R.id.tv_title)
                                 val parentLocation = IntArray(2)

@@ -29,16 +29,18 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
 
     private final boolean showLastLine;
     private final HeadDrawableLocationMeasurer headDrawableLocationMeasurer;
+    private final int paddingLeft;
 
     /**
      * @param headDrawable          小圆头的drawable
      * @param lineDrawable          下面的线的drawable
-     * @param paddingHorizontal     水平方向的padding
+     * @param paddingLeft           左边的padding
+     * @param paddingRight          右边的padding
      * @param showLastLine          是否显示最后一个条目的线
      * @param headDrawableMarginTop 头的margin
      */
-    public ThroughTimeLineDecorator(Drawable headDrawable, Drawable lineDrawable, int paddingHorizontal, final int headDrawableMarginTop, boolean showLastLine) {
-        this(headDrawable, lineDrawable, paddingHorizontal, showLastLine, new HeadDrawableLocationMeasurer() {
+    public ThroughTimeLineDecorator(Drawable headDrawable, Drawable lineDrawable, int paddingLeft, int paddingRight, final int headDrawableMarginTop, boolean showLastLine) {
+        this(headDrawable, lineDrawable, paddingLeft, paddingRight, showLastLine, new HeadDrawableLocationMeasurer() {
             @Override
             public int getHeadDrawableMarginTop(View childView) {
                 return headDrawableMarginTop;
@@ -50,16 +52,18 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
     /**
      * @param headDrawable                 小圆头的drawable
      * @param lineDrawable                 下面的线的drawable
-     * @param paddingHorizontal            水平方向的padding
+     * @param paddingLeft                  水平方向的padding
      * @param showLastLine                 是否显示最后一个条目的线
      * @param headDrawableLocationMeasurer 自定义头的位置测量器
      */
-    public ThroughTimeLineDecorator(@NonNull Drawable headDrawable, @NonNull Drawable lineDrawable, int paddingHorizontal, boolean showLastLine, @NonNull HeadDrawableLocationMeasurer headDrawableLocationMeasurer) {
+    public ThroughTimeLineDecorator(@NonNull Drawable headDrawable, @NonNull Drawable lineDrawable, int paddingLeft, int paddingRight, boolean showLastLine, @NonNull HeadDrawableLocationMeasurer headDrawableLocationMeasurer) {
         this.headDrawable = headDrawable;
         this.lineDrawable = lineDrawable;
         this.showLastLine = showLastLine;
         this.headDrawableLocationMeasurer = headDrawableLocationMeasurer;
-        this.width = Math.max(headDrawable.getIntrinsicWidth(), lineDrawable.getIntrinsicWidth()) + paddingHorizontal * 2;
+        this.paddingLeft = paddingLeft;
+        // 宽度直接通过HeadDrawable 计算出来的
+        this.width = headDrawable.getIntrinsicWidth() + paddingLeft + paddingRight;
     }
 
     @Override
@@ -86,12 +90,12 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
                     parent.getDecoratedBoundsWithMargins(child, mBounds);
                     final int top = mBounds.top + Math.round(child.getTranslationY());
                     final int headWidth = this.headDrawable.getIntrinsicWidth();
-                    int headLeft = (width - headWidth >> 1) + left;
+                    final int headLeft = left + this.paddingLeft;
                     final int headDrawableMarginTop = this.headDrawableLocationMeasurer.getHeadDrawableMarginTop(child);
                     this.headDrawable.setBounds(headLeft, top + headDrawableMarginTop, headLeft + headWidth, top + headDrawableMarginTop + this.headDrawable.getIntrinsicHeight());
                     this.headDrawable.draw(c);
                     final int lineWidth = this.lineDrawable.getIntrinsicWidth();
-                    final int lineLeft = (width - lineWidth >> 1) + left;
+                    final int lineLeft = this.headDrawable.getBounds().centerX() - (lineWidth >> 1);
                     final int lineRight = lineLeft + lineWidth;
 
                     int childPosition = layoutManager.getPosition(child);
