@@ -30,6 +30,7 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
     private final boolean showLastLine;
     private final HeadDrawableLocationMeasurer headDrawableLocationMeasurer;
     private final int paddingLeft;
+    private ItemTypeHandler typeHandler;
 
     /**
      * @param headDrawable          小圆头的drawable
@@ -66,6 +67,10 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
         this.width = headDrawable.getIntrinsicWidth() + paddingLeft + paddingRight;
     }
 
+    public void setTypeHandler(ItemTypeHandler typeHandler) {
+        this.typeHandler = typeHandler;
+    }
+
     @Override
     public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
@@ -87,6 +92,9 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
             for (int i = 0; i < childCount; i++) {
                 View child = layoutManager.getChildAt(i);
                 if (child != null) {
+                    // 跳过不需要绘制的itemType
+                    if (skipDrawType(parent, child)) continue;
+
                     parent.getDecoratedBoundsWithMargins(child, mBounds);
                     final int top = mBounds.top + Math.round(child.getTranslationY());
                     final int headWidth = this.headDrawable.getIntrinsicWidth();
@@ -117,12 +125,39 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
 
     }
 
+    /**
+     * 是否需要跳过当前view的绘制
+     *
+     * @param parent
+     * @param child
+     * @return
+     */
+    private boolean skipDrawType(@NonNull RecyclerView parent, View child) {
+        RecyclerView.Adapter adapter = parent.getAdapter();
+        if (typeHandler != null && adapter != null && !typeHandler.drawDecorator(parent.getChildAdapterPosition(child), adapter.getItemViewType(parent.getChildAdapterPosition(child)))) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        outRect.left = width;
+        if (!skipDrawType(parent, view)) {
+            outRect.left = width;
+        }
     }
 
     public interface HeadDrawableLocationMeasurer {
         int getHeadDrawableMarginTop(View childView);
+    }
+
+    public interface ItemTypeHandler {
+        /**
+         * 这种itemType是否需要绘制
+         *
+         * @param itemType
+         * @return
+         */
+        boolean drawDecorator(int position, int itemType);
     }
 }

@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         val lineDrawable = resources.getDrawable(R.drawable.line).mutate() as GradientDrawable
 
         AlertDialog.Builder(this)
-            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)")) { dialog, which ->
+            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)", "连线式(跳过第二个Item进行绘制)")) { dialog, which ->
                 when (which) {
                     0 -> {
                         recyclerView.removeItemDecorationAt(0)
@@ -105,6 +105,20 @@ class MainActivity : AppCompatActivity() {
                                 // 这只是TextView一行的情况下，多行的需要计算TextView出行高
                                 val marginTop = childLocation[1] - parentLocation[1] + tvTitle.height / 2
                                 marginTop
+                            }
+                        )
+                    }
+                    3 -> {
+                        // 直接标一个固定值，设置头的间距
+                        recyclerView.removeItemDecorationAt(0)
+                        recyclerView.addItemDecoration(
+                            ThroughTimeLineDecorator(
+                                headerDrawable, lineDrawable,
+                                5, 40, 48, false
+                            ).apply {
+                                setTypeHandler { position, itemType ->
+                                    position != 1
+                                }
                             }
                         )
                     }
