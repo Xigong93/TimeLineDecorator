@@ -156,7 +156,7 @@ public class ThroughTimeLineDecorator extends RecyclerView.ItemDecoration {
          * 这种itemType是否需要绘制
          *
          * @param itemType
-         * @return
+         * @return 是否需要绘制装饰器
          */
         boolean drawDecorator(int position, int itemType);
     }
