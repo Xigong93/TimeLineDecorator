@@ -32,6 +32,15 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
     private ItemTypeHandler typeHandler;
 
     /**
+     * 最后一个item的下半段线底部的距离
+     */
+    private int lastLineMarginBottom;
+    /**
+     * 是否要绘制最后一个条目的下半段线
+     */
+    private boolean drawLastItemBottomLine = true;
+
+    /**
      * @param headDrawable          小圆头的drawable
      * @param lineDrawable          下面的线的drawable
      * @param paddingLeft           左边的padding
@@ -61,6 +70,24 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
         this.paddingLeft = paddingLeft;
         // 宽度直接通过HeadDrawable 计算出来的
         this.width = headDrawable.getIntrinsicWidth() + paddingLeft + paddingRight;
+    }
+
+    /**
+     * 是否要绘制最后一个条目的下半段线
+     *
+     * @param drawLastItemBottomLine
+     */
+    public void setDrawLastItemBottomLine(boolean drawLastItemBottomLine) {
+        this.drawLastItemBottomLine = drawLastItemBottomLine;
+    }
+
+    /**
+     * 最后一个item的下半段线底部的距离
+     *
+     * @param lastLineMarginBottom
+     */
+    public void setLastLineMarginBottom(int lastLineMarginBottom) {
+        this.lastLineMarginBottom = lastLineMarginBottom;
     }
 
     public void setTypeHandler(ItemTypeHandler typeHandler) {
@@ -108,14 +135,21 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
                         this.lineDrawable.setBounds(lineLeft, top, lineRight, this.headDrawable.getBounds().top);
                         this.lineDrawable.draw(c);
                     }
+
+                    //绘制下半段线
                     // 当前为最后一条，或为倒数第二条且不绘制最后一条时，不绘制最下面的那条线
                     if (childPosition == layoutManager.getItemCount() - 1 || childPosition == layoutManager.getItemCount() - 2 && !drawLastItem) {
-                        break;
-                    }
-                    //绘制下半段线
-                    this.lineDrawable.setBounds(lineLeft, this.headDrawable.getBounds().bottom, lineRight, top + mBounds.height());
-                    this.lineDrawable.draw(c);
+                        if (drawLastItemBottomLine) {
+                            this.lineDrawable.setBounds(lineLeft, this.headDrawable.getBounds().bottom, lineRight, top + mBounds.height() - lastLineMarginBottom);
+                            this.lineDrawable.draw(c);
+                        }
 
+                        break;
+                    } else {
+                        this.lineDrawable.setBounds(lineLeft, this.headDrawable.getBounds().bottom, lineRight, top + mBounds.height());
+                        this.lineDrawable.draw(c);
+
+                    }
 
                 }
             }

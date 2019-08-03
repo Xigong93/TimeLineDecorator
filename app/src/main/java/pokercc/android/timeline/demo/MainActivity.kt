@@ -67,7 +67,15 @@ class MainActivity : AppCompatActivity() {
         val lineDrawable = resources.getDrawable(R.drawable.line).mutate() as GradientDrawable
 
         AlertDialog.Builder(this)
-            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)", "连线式(不显示最后一个)")) { dialog, which ->
+            .setItems(
+                arrayOf(
+                    "普通",
+                    "连线式(固定头Margin)",
+                    "连线式(计算头Margin)",
+                    "连线式(不显示最后一个条目的下半段的线)",
+                    "连线式(不显示最后一个)"
+                )
+            ) { dialog, which ->
                 when (which) {
                     0 -> {
                         recyclerView.removeItemDecorationAt(0)
@@ -109,6 +117,27 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                     3 -> {
+                        // 不显示最后一个条目的下半段的线
+                        recyclerView.removeItemDecorationAt(0)
+                        recyclerView.addItemDecoration(
+                            ThroughTimeLineDecorator2(
+                                headerDrawable, lineDrawable,
+                                40, 40
+                            ) { childView: View ->
+                                val tvTitle = childView.findViewById<View>(R.id.tv_title)
+                                val parentLocation = IntArray(2)
+                                childView.getLocationInWindow(parentLocation)
+                                val childLocation = IntArray(2)
+                                tvTitle.getLocationInWindow(childLocation)
+                                // 这只是TextView一行的情况下，多行的需要计算TextView出行高
+                                val marginTop = childLocation[1] - parentLocation[1] + tvTitle.height / 2
+                                marginTop
+                            }.apply {
+                                setDrawLastItemBottomLine(false)
+                            }
+                        )
+                    }
+                    4 -> {
                         // 直接标一个固定值，设置头的间距
                         recyclerView.removeItemDecorationAt(0)
                         recyclerView.addItemDecoration(
@@ -117,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                                 5, 40, 48
                             ).apply {
                                 setTypeHandler { false }
+                                setLastLineMarginBottom(90)
                             }
                         )
                     }
