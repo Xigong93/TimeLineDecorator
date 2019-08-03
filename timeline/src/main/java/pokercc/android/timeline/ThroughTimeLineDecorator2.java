@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import androidx.annotation.NonNull;
+import androidx.annotation.Px;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -73,7 +74,7 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
     }
 
     /**
-     * 是否要绘制最后一个条目的下半段线
+     * 是否要绘制最后一个条目的下半段线(默认为true)
      *
      * @param drawLastItemBottomLine
      */
@@ -82,11 +83,11 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
     }
 
     /**
-     * 最后一个item的下半段线底部的距离
+     * 最后一个item的下半段线底部的距离(默认为0)
      *
      * @param lastLineMarginBottom
      */
-    public void setLastLineMarginBottom(int lastLineMarginBottom) {
+    public void setLastLineMarginBottom(@Px int lastLineMarginBottom) {
         this.lastLineMarginBottom = lastLineMarginBottom;
     }
 
