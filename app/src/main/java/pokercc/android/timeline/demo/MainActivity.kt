@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import kotlinx.android.synthetic.main.activity_main.*
+import pokercc.android.timeline.ThroughTimeLineDecorator2
 import pokercc.android.timeline.TimeLineDecorator
-import pokercc.android.timeline.ThroughTimeLineDecorator
 
 
 class MainActivity : AppCompatActivity() {
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         val lineDrawable = resources.getDrawable(R.drawable.line).mutate() as GradientDrawable
 
         AlertDialog.Builder(this)
-            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)", "连线式(跳过第二个Item进行绘制)")) { dialog, which ->
+            .setItems(arrayOf("普通", "连线式(固定头Margin)", "连线式(计算头Margin)", "连线式(不显示最后一个)")) { dialog, which ->
                 when (which) {
                     0 -> {
                         recyclerView.removeItemDecorationAt(0)
@@ -83,9 +83,9 @@ class MainActivity : AppCompatActivity() {
                         // 直接标一个固定值，设置头的间距
                         recyclerView.removeItemDecorationAt(0)
                         recyclerView.addItemDecoration(
-                            ThroughTimeLineDecorator(
+                            ThroughTimeLineDecorator2(
                                 headerDrawable, lineDrawable,
-                                5, 40, 48, false
+                                5, 40, 48
                             )
                         )
                     }
@@ -93,9 +93,9 @@ class MainActivity : AppCompatActivity() {
                         // 动态计算头的间距
                         recyclerView.removeItemDecorationAt(0)
                         recyclerView.addItemDecoration(
-                            ThroughTimeLineDecorator(
+                            ThroughTimeLineDecorator2(
                                 headerDrawable, lineDrawable,
-                                40, 40, false
+                                40, 40
                             ) { childView: View ->
                                 val tvTitle = childView.findViewById<View>(R.id.tv_title)
                                 val parentLocation = IntArray(2)
@@ -112,13 +112,11 @@ class MainActivity : AppCompatActivity() {
                         // 直接标一个固定值，设置头的间距
                         recyclerView.removeItemDecorationAt(0)
                         recyclerView.addItemDecoration(
-                            ThroughTimeLineDecorator(
+                            ThroughTimeLineDecorator2(
                                 headerDrawable, lineDrawable,
-                                5, 40, 48, false
+                                5, 40, 48
                             ).apply {
-                                setTypeHandler { position, itemType ->
-                                    position != 1
-                                }
+                                setTypeHandler { false }
                             }
                         )
                     }
