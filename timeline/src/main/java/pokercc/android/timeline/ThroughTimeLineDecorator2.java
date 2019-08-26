@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.recyclerview.widget.RecyclerView;
@@ -118,6 +119,12 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
             for (int i = 0; i < childCount; i++) {
                 View child = layoutManager.getChildAt(i);
                 if (child != null) {
+                    // 跳过不绘制的条目
+                    if (typeHandler != null) {
+                        if (typeHandler.skipItem(parent, layoutManager.getPosition(child))) {
+                            continue;
+                        }
+                    }
 
                     parent.getDecoratedBoundsWithMargins(child, mBounds);
                     final int top = mBounds.top + Math.round(child.getTranslationY());
@@ -170,23 +177,34 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        if (parent.getChildAdapterPosition(view) != state.getItemCount() - 1 ||
-                drawLast(parent)) {
-            outRect.left = width;
-        }
+//        if (parent.getChildAdapterPosition(view) != state.getItemCount() - 1 ||
+//                drawLast(parent)) {
+//            outRect.left = width;
+//        }
     }
 
     public interface HeadDrawableLocationMeasurer {
         int getHeadDrawableMarginTop(View childView);
     }
 
-    public interface ItemTypeHandler {
+    public abstract class ItemTypeHandler {
         /**
          * 是否需要显示最后一个,比如最后一条是下拉刷新，则不绘制
          *
          * @param @NonNull RecyclerView parent
          * @return 是否需要绘制装饰器
          */
-        boolean drawLastItem(@NonNull RecyclerView parent);
+        public abstract boolean drawLastItem(@NonNull RecyclerView parent);
+
+        /**
+         * 是否跳过这条的绘制
+         *
+         * @param parent
+         * @param position
+         * @return
+         */
+        public boolean skipItem(RecyclerView parent, int position) {
+            return false;
+        }
     }
 }

@@ -145,7 +145,12 @@ class MainActivity : AppCompatActivity() {
                                 headerDrawable, lineDrawable,
                                 5, 40, 48
                             ).apply {
-                                setTypeHandler { false }
+                                setTypeHandler(object:ThroughTimeLineDecorator2.ItemTypeHandler(){
+                                    override fun drawLastItem(parent: RecyclerView): Boolean {
+
+                                        return false
+                                    }
+                                })
                                 setLastLineMarginBottom(90)
                             }
                         )
