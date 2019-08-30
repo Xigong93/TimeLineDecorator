@@ -138,10 +138,18 @@ public class ThroughTimeLineDecorator2 extends RecyclerView.ItemDecoration {
                     final int lineRight = lineLeft + lineWidth;
 
                     // 绘制上半段线
+                    // 1. 第一条不绘制
+                    // 2. 如果当前不是第一条，且上一条没有绘制，那么这一条也不绘制
                     int childPosition = layoutManager.getPosition(child);
                     if (childPosition != 0) {
-                        this.lineDrawable.setBounds(lineLeft, top, lineRight, this.headDrawable.getBounds().top);
-                        this.lineDrawable.draw(c);
+                        boolean lastItemSkipDraw = true;
+                        if (typeHandler != null) {
+                            lastItemSkipDraw = typeHandler.skipItem(parent, layoutManager.getPosition(child) - 1);
+                        }
+                        if (!lastItemSkipDraw) {
+                            this.lineDrawable.setBounds(lineLeft, top, lineRight, this.headDrawable.getBounds().top);
+                            this.lineDrawable.draw(c);
+                        }
                     }
 
                     //绘制下半段线
